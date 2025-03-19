@@ -1,0 +1,152 @@
+/* Global styles */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  direction: rtl;
+}
+
+/* Layout */
+.app-container {
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.ant-layout-sider {
+  box-shadow: 2px 0 8px 0 rgba(29, 35, 41, 0.05);
+}
+
+.ant-layout-sider-collapsed {
+  box-shadow: 2px 0 8px 0 rgba(29, 35, 41, 0.05);
+}
+
+/* Content */
+.ant-layout-content {
+  margin-right: 200px;
+  transition: all 0.2s;
+}
+
+.ant-layout-sider-collapsed + .ant-layout .ant-layout-content {
+  margin-right: 80px;
+}
+
+/* Cards */
+.ant-card {
+  border-radius: 8px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+}
+
+.ant-card-head {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* Tables */
+.ant-table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.ant-table-thead > tr > th {
+  background: #fafafa;
+}
+
+/* Forms */
+.ant-form-item-label > label {
+  font-weight: 500;
+}
+
+/* Buttons */
+.ant-btn {
+  border-radius: 6px;
+}
+
+.ant-btn-primary {
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+}
+
+/* Modals */
+.ant-modal-content {
+  border-radius: 8px;
+}
+
+.ant-modal-header {
+  border-bottom: 1px solid #f0f0f0;
+  border-radius: 8px 8px 0 0;
+}
+
+/* Lists */
+.ant-list-item {
+  padding: 16px;
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+
+.ant-list-item:hover {
+  background: #fafafa;
+}
+
+/* Tabs */
+.ant-tabs-nav {
+  margin-bottom: 16px;
+}
+
+/* Typography */
+.ant-typography {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.ant-typography-secondary {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .ant-layout-content {
+    margin-right: 0;
+  }
+  
+  .ant-layout-sider-collapsed + .ant-layout .ant-layout-content {
+    margin-right: 0;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* RTL support for Ant Design */
+.ant-table-rtl .ant-table-container table,
+.ant-table-rtl .ant-table-container table tr th,
+.ant-table-rtl .ant-table-container table tr td {
+  text-align: right;
+}
+
+.site-layout-content {
+  min-height: 280px;
+  padding: 24px;
+  background: #fff;
+}
+
+.logo {
+  height: 32px;
+  margin: 16px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ant-layout-sider-collapsed .logo .logo-text {
+  display: none;
+}
+
+.header-title {
+  color: #fff;
+  margin: 0;
+  font-size: 20px;
+} 
