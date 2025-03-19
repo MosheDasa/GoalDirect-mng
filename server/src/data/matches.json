@@ -1,0 +1,22 @@
+{
+  "matches": [
+    {
+      "id": "1",
+      "date": "2024-01-15T19:00:00.000Z",
+      "homeTeamId": "1",
+      "awayTeamId": "2",
+      "groupId": "1",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "2",
+      "date": "2024-01-22T19:00:00.000Z",
+      "homeTeamId": "3",
+      "awayTeamId": "4",
+      "groupId": "2",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    }
+  ]
+} 

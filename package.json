@@ -1,0 +1,14 @@
+{
+  "name": "goaldirect",
+  "version": "1.0.0",
+  "description": "GoalDirect - מערכת ניהול טורניר כדורגל",
+  "scripts": {
+    "install-all": "npm install && cd client && npm install && cd ../server && npm install",
+    "start": "concurrently \"cd server && npm run dev\" \"cd client && npm start\"",
+    "build": "cd client && npm run build && cd ../server && npm run build",
+    "test": "cd client && npm test && cd ../server && npm test"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+} 

@@ -1,0 +1,36 @@
+{
+  "players": [
+    {
+      "id": "1",
+      "firstName": "איתן",
+      "lastName": "טיבי",
+      "teamId": "1",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "2",
+      "firstName": "דור",
+      "lastName": "פרץ",
+      "teamId": "1",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "3",
+      "firstName": "אלון",
+      "lastName": "אבוקסיס",
+      "teamId": "2",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "4",
+      "firstName": "אור",
+      "lastName": "דדה",
+      "teamId": "2",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    }
+  ]
+} 

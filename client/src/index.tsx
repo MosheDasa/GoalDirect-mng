@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
 import heIL from 'antd/locale/he_IL';
 import './index.css';
@@ -21,7 +22,9 @@ root.render(
         },
       }}
     >
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </ConfigProvider>
   </React.StrictMode>
 ); 

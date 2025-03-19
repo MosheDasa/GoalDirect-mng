@@ -103,12 +103,27 @@ export const matchesApi = {
     const response = await api.put(`/matches/${id}`, match);
     return response.data;
   },
+  delete: async (id: string): Promise<void> => {
+    await api.delete(`/matches/${id}`);
+  },
 };
 
 // Goals API
 export const goalsApi = {
+  getAll: async (): Promise<Goal[]> => {
+    const response = await api.get('/goals');
+    return response.data;
+  },
+  getById: async (id: string): Promise<Goal> => {
+    const response = await api.get(`/goals/${id}`);
+    return response.data;
+  },
   create: async (goal: Omit<Goal, 'id' | 'createdAt' | 'updatedAt'>): Promise<Goal> => {
     const response = await api.post('/goals', goal);
+    return response.data;
+  },
+  update: async (id: string, goal: Partial<Goal>): Promise<Goal> => {
+    const response = await api.put(`/goals/${id}`, goal);
     return response.data;
   },
   delete: async (id: string): Promise<void> => {

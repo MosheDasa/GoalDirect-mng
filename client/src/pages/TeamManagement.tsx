@@ -151,7 +151,7 @@ const TeamManagement: React.FC = () => {
       
       // Unassign players from the team
       for (const player of unassignedPlayers) {
-        await playersApi.update(player.id, { teamId: null });
+        await playersApi.update(player.id, { teamId: undefined });
       }
       
       messageApi.success('השחקנים שויכו בהצלחה');

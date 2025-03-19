@@ -18,7 +18,7 @@ import {
   NotificationOutlined 
 } from '@ant-design/icons';
 import { announcementsApi } from '@services/api';
-import { Announcement } from '@types';
+import { Announcement } from '../types';
 
 const { Title, Text, Paragraph } = Typography;
 const { TextArea } = Input;

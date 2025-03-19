@@ -15,7 +15,7 @@ import {
 } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, TrophyOutlined } from '@ant-design/icons';
 import { playersApi, teamsApi, standingsApi } from '@services/api';
-import { Player, Team, TopScorer } from '@types';
+import { Player, Team, TopScorer } from '../types';
 
 const { Title } = Typography;
 const { Option } = Select;
