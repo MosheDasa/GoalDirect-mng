@@ -161,7 +161,7 @@ export const standingsApi = {
     return response.data;
   },
   getTopScorers: async (): Promise<TopScorer[]> => {
-    const response = await api.get('/top-scorers');
+    const response = await api.get('/players');
     return response.data;
   },
 };
