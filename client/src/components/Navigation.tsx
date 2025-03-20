@@ -25,8 +25,8 @@ const Navigation: React.FC = () => {
       <Menu.Item key="/group-draw" icon={<GroupOutlined />}>
         <Link to="/group-draw">הגרלת בתים</Link>
       </Menu.Item>
-      <Menu.Item key="/result-entry" icon={<TrophyOutlined />}>
-        <Link to="/result-entry">הזנת תוצאות</Link>
+      <Menu.Item key="/results" icon={<TrophyOutlined />}>
+        <Link to="/results">הזנת תוצאות</Link>
       </Menu.Item>
       <Menu.Item key="/announcements" icon={<NotificationOutlined />}>
         <Link to="/announcements">הודעות</Link>

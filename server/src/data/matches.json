@@ -6,11 +6,11 @@
       "homeTeamId": "1",
       "awayTeamId": "2",
       "groupId": "1",
-      "homeScore": null,
-      "awayScore": null,
+      "homeScore": 2,
+      "awayScore": 0,
       "playedAt": null,
       "createdAt": "2024-01-01T00:00:00.000Z",
-      "updatedAt": "2024-01-01T00:00:00.000Z"
+      "updatedAt": "2025-03-20T04:43:05.104Z"
     },
     {
       "id": "2",
@@ -18,11 +18,11 @@
       "homeTeamId": "3",
       "awayTeamId": "4",
       "groupId": "2",
-      "homeScore": null,
-      "awayScore": null,
+      "homeScore": 0,
+      "awayScore": 1,
       "playedAt": null,
       "createdAt": "2024-01-01T00:00:00.000Z",
-      "updatedAt": "2024-01-01T00:00:00.000Z"
+      "updatedAt": "2025-03-20T04:43:11.928Z"
     }
   ]
-} 
+}

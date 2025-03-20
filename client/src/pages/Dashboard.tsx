@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Row, Col, Card, Statistic, List, Typography, Button } from 'antd';
 import { 
   TeamOutlined, 
@@ -13,6 +13,7 @@ import { Match, Team, Player, Goal, TeamStanding, Announcement } from '../types'
 const { Title } = Typography;
 
 const Dashboard: React.FC = () => {
+  const navigate = useNavigate();
   const [teams, setTeams] = useState<Team[]>([]);
   const [players, setPlayers] = useState<Player[]>([]);
   const [matches, setMatches] = useState<Match[]>([]);
@@ -118,19 +119,19 @@ const Dashboard: React.FC = () => {
 
       {/* Quick Action Buttons */}
       <Row gutter={16} style={{ marginBottom: 24 }}>
-        <Col xs={24} sm={8}>
-          <Button type="primary" block size="large">
-            <Link to="/teams">ניהול קבוצות</Link>
+        <Col onClick={() => navigate('/teams')} xs={24} sm={8}>
+          <Button  type="primary" block size="large">
+             ניהול קבוצות 
           </Button>
         </Col>
-        <Col xs={24} sm={8}>
+        <Col xs={24} onClick={() => navigate('/players')} sm={8}>
           <Button type="primary" block size="large">
-            <Link to="/players">ניהול שחקנים</Link>
+            ניהול שחקנים
           </Button>
         </Col>
-        <Col xs={24} sm={8}>
+        <Col xs={24} onClick={() => navigate('/results')} sm={8}>
           <Button type="primary" block size="large">
-            <Link to="/results">הזנת תוצאות</Link>
+          הזנת תוצאות
           </Button>
         </Col>
       </Row>
