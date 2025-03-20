@@ -20,7 +20,10 @@ export interface Match {
   date: string;
   homeTeamId: string;
   awayTeamId: string;
+  homeScore: number | null;
+  awayScore: number | null;
   groupId: string;
+  playedAt: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -29,7 +32,9 @@ export interface Goal {
   id: string;
   matchId: string;
   playerId: string;
+  teamId: string;
   minute: number;
+  timestamp: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -59,9 +64,9 @@ export interface Announcement {
 export interface MatchWithDetails extends Match {
   homeTeamName: string;
   awayTeamName: string;
-  homeScore: number | null;
-  awayScore: number | null;
-  playedAt: string | null;
+  goals: Goal[];
+  homeTeam?: Team;
+  awayTeam?: Team;
 }
 
 export interface FormattedGoal extends Goal {

@@ -22,26 +22,14 @@ import {
   TrophyOutlined
 } from '@ant-design/icons';
 import { matchesApi, teamsApi, playersApi, goalsApi } from '@services/api';
-import { Match, Team, Player, Goal } from '../types';
+import { Match, Team, Player, Goal, MatchWithDetails, FormattedGoal } from '../types';
 
 const { Title, Text } = Typography;
 const { TabPane } = Tabs;
 const { Option } = Select;
 
-interface MatchWithDetails extends Match {
-  homeTeamName: string;
-  awayTeamName: string;
-  goals: Goal[];
-  homeTeam?: Team;
-  awayTeam?: Team;
-}
-
-interface FormattedGoal extends Goal {
-  playerName: string;
-  teamName: string;
-}
-
 const ResultEntry: React.FC = () => {
+  const [messageApi, contextHolder] = message.useMessage();
   const [matches, setMatches] = useState<MatchWithDetails[]>([]);
   const [teams, setTeams] = useState<Team[]>([]);
   const [players, setPlayers] = useState<Player[]>([]);
@@ -49,7 +37,6 @@ const ResultEntry: React.FC = () => {
   const [selectedMatch, setSelectedMatch] = useState<MatchWithDetails | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [goalFormVisible, setGoalFormVisible] = useState(false);
-  const [messageApi] = message.useMessage();
   const [form] = Form.useForm();
   const [goalForm] = Form.useForm();
 
@@ -64,22 +51,7 @@ const ResultEntry: React.FC = () => {
           playersApi.getAll()
         ]);
         
-        // Enrich matches with team names and goals
-        const enrichedMatches = matchesData.map(match => {
-          const homeTeam = teamsData.find(team => team.id === match.homeTeamId);
-          const awayTeam = teamsData.find(team => team.id === match.awayTeamId);
-          
-          return {
-            ...match,
-            homeTeamName: homeTeam?.name || 'לא ידוע',
-            awayTeamName: awayTeam?.name || 'לא ידוע',
-            goals: [],
-            homeTeam,
-            awayTeam
-          };
-        });
-        
-        setMatches(enrichedMatches);
+        setMatches(matchesData);
         setTeams(teamsData);
         setPlayers(playersData);
       } catch (error) {
@@ -146,7 +118,10 @@ const ResultEntry: React.FC = () => {
         matchId: selectedMatch.id,
         playerId: values.playerId,
         teamId: values.teamId,
-        timestamp: new Date().toISOString()
+        minute: values.minute,
+        timestamp: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
       };
       
       const addedGoal = await goalsApi.create(newGoal);
@@ -209,6 +184,7 @@ const ResultEntry: React.FC = () => {
 
   return (
     <div>
+      {contextHolder}
       <Title level={2}>הזנת תוצאות</Title>
       
       <Tabs defaultActiveKey="pending">
@@ -256,121 +232,110 @@ const ResultEntry: React.FC = () => {
                   title={
                     <Space size="large">
                       <Text>{match.homeTeamName}</Text>
-                      <Text strong>{match.homeScore} - {match.awayScore}</Text>
+                      <Text type="secondary">נגד</Text>
                       <Text>{match.awayTeamName}</Text>
                     </Space>
                   }
                   extra={
-                    <Button 
-                      icon={<TrophyOutlined />} 
-                      onClick={() => showResultForm(match)}
-                    >
-                      עריכת פרטים
-                    </Button>
+                    <Space>
+                      <Button 
+                        type="primary" 
+                        icon={<PlusOutlined />} 
+                        onClick={() => {
+                          setSelectedMatch(match);
+                          showGoalForm();
+                        }}
+                      >
+                        הוספת שער
+                      </Button>
+                      <Button 
+                        type="primary" 
+                        icon={<SaveOutlined />} 
+                        onClick={() => showResultForm(match)}
+                      >
+                        עדכון תוצאה
+                      </Button>
+                    </Space>
                   }
                 >
-                  <Text type="secondary">
-                    {match.playedAt 
-                      ? `תאריך: ${new Date(match.playedAt).toLocaleDateString('he-IL')}` 
-                      : 'תאריך לא נקבע'}
-                  </Text>
+                  <Space direction="vertical" size="small">
+                    <Text type="secondary">
+                      {match.playedAt 
+                        ? `תאריך: ${new Date(match.playedAt).toLocaleDateString('he-IL')}` 
+                        : 'תאריך לא נקבע'}
+                    </Text>
+                    <Text strong>
+                      תוצאה: {match.homeScore} - {match.awayScore}
+                    </Text>
+                    {match.goals.length > 0 && (
+                      <>
+                        <Divider />
+                        <Text strong>שערים:</Text>
+                        <List
+                          size="small"
+                          dataSource={formatGoals(match.goals)}
+                          renderItem={goal => (
+                            <List.Item
+                              actions={[
+                                <Button 
+                                  type="text" 
+                                  danger 
+                                  icon={<DeleteOutlined />} 
+                                  onClick={() => handleDeleteGoal(goal.id)}
+                                />
+                              ]}
+                            >
+                              <Space>
+                                <Text>{goal.playerName}</Text>
+                                <Text type="secondary">({goal.teamName})</Text>
+                                <Text type="secondary">{goal.minute}'</Text>
+                              </Space>
+                            </List.Item>
+                          )}
+                        />
+                      </>
+                    )}
+                  </Space>
                 </Card>
               </List.Item>
             )}
           />
         </TabPane>
       </Tabs>
-      
-      {/* Result Modal */}
+
       <Modal
-        title={`הזנת תוצאה: ${selectedMatch?.homeTeamName} נגד ${selectedMatch?.awayTeamName}`}
+        title="הזנת תוצאה"
         open={modalVisible}
+        onOk={form.submit}
         onCancel={() => setModalVisible(false)}
-        footer={null}
-        width={700}
       >
         <Form
           form={form}
           onFinish={handleSaveResult}
           layout="vertical"
-          initialValues={{
-            homeScore: selectedMatch?.homeScore || 0,
-            awayScore: selectedMatch?.awayScore || 0
-          }}
         >
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="homeScore"
-                label={selectedMatch?.homeTeamName}
-                rules={[{ required: true, message: 'נא להזין תוצאה' }]}
-              >
-                <InputNumber min={0} style={{ width: '100%' }} />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="awayScore"
-                label={selectedMatch?.awayTeamName}
-                rules={[{ required: true, message: 'נא להזין תוצאה' }]}
-              >
-                <InputNumber min={0} style={{ width: '100%' }} />
-              </Form.Item>
-            </Col>
-          </Row>
-          
-          <Divider>שערים</Divider>
-          
-          <List
-            size="small"
-            bordered
-            dataSource={selectedMatch?.goals ? formatGoals(selectedMatch.goals) : []}
-            locale={{ emptyText: 'לא הוזנו שערים למשחק זה' }}
-            renderItem={goal => (
-              <List.Item
-                actions={[
-                  <Button 
-                    key="delete" 
-                    type="text" 
-                    danger 
-                    icon={<DeleteOutlined />}
-                    onClick={() => handleDeleteGoal(goal.id)}
-                  />
-                ]}
-              >
-                <Text>{goal.playerName}</Text>
-                <Text type="secondary"> ({goal.teamName})</Text>
-              </List.Item>
-            )}
-          />
-          
-          <Button 
-            icon={<PlusOutlined />} 
-            onClick={showGoalForm}
-            style={{ marginTop: 16, marginBottom: 16 }}
+          <Form.Item
+            name="homeScore"
+            label="תוצאה ביתית"
+            rules={[{ required: true, message: 'נא להזין תוצאה ביתית' }]}
           >
-            הוסף שער
-          </Button>
-          
-          <div style={{ textAlign: 'left', marginTop: 16 }}>
-            <Space>
-              <Button type="primary" htmlType="submit">
-                שמור תוצאה
-              </Button>
-              <Button onClick={() => setModalVisible(false)}>
-                ביטול
-              </Button>
-            </Space>
-          </div>
+            <InputNumber min={0} />
+          </Form.Item>
+          <Form.Item
+            name="awayScore"
+            label="תוצאה חיצונית"
+            rules={[{ required: true, message: 'נא להזין תוצאה חיצונית' }]}
+          >
+            <InputNumber min={0} />
+          </Form.Item>
         </Form>
       </Modal>
-      
-      {/* Goal Modal */}
+
       <Modal
         title="הוספת שער"
         open={goalFormVisible}
+        onOk={goalForm.submit}
         onCancel={() => setGoalFormVisible(false)}
-        footer={null}
       >
         <Form
           form={goalForm}
@@ -382,53 +347,35 @@ const ResultEntry: React.FC = () => {
             label="קבוצה"
             rules={[{ required: true, message: 'נא לבחור קבוצה' }]}
           >
-            <Select placeholder="בחר קבוצה">
-              {selectedMatch && [
-                <Option key={selectedMatch.homeTeamId} value={selectedMatch.homeTeamId}>
-                  {selectedMatch.homeTeamName}
-                </Option>,
-                <Option key={selectedMatch.awayTeamId} value={selectedMatch.awayTeamId}>
-                  {selectedMatch.awayTeamName}
-                </Option>
-              ]}
+            <Select>
+              {selectedMatch && (
+                <>
+                  <Option value={selectedMatch.homeTeamId}>{selectedMatch.homeTeamName}</Option>
+                  <Option value={selectedMatch.awayTeamId}>{selectedMatch.awayTeamName}</Option>
+                </>
+              )}
             </Select>
           </Form.Item>
-          
           <Form.Item
             name="playerId"
             label="שחקן"
             rules={[{ required: true, message: 'נא לבחור שחקן' }]}
-            dependencies={['teamId']}
           >
-            <Select 
-              placeholder="בחר שחקן"
-              disabled={!goalForm.getFieldValue('teamId')}
-            >
-              {goalForm.getFieldValue('teamId') && players
-                .filter(player => player.teamId === goalForm.getFieldValue('teamId'))
-                .map(player => (
-                  <Option key={player.id} value={player.id}>
-                    {player.firstName} {player.lastName}
-                  </Option>
-                ))
-              }
+            <Select>
+              {players.map(player => (
+                <Option key={player.id} value={player.id}>
+                  {player.firstName} {player.lastName}
+                </Option>
+              ))}
             </Select>
           </Form.Item>
-          
-          <div style={{ textAlign: 'left' }}>
-            <Space>
-              <Button 
-                type="primary" 
-                htmlType="submit"
-                disabled={!goalForm.getFieldValue('teamId') || !goalForm.getFieldValue('playerId')}
-              >
-                הוסף שער
-              </Button>
-              <Button onClick={() => setGoalFormVisible(false)}>
-                ביטול
-              </Button>
-            </Space>
-          </div>
+          <Form.Item
+            name="minute"
+            label="דקה"
+            rules={[{ required: true, message: 'נא להזין דקה' }]}
+          >
+            <InputNumber min={1} max={120} />
+          </Form.Item>
         </Form>
       </Modal>
     </div>

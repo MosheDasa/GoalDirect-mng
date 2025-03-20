@@ -6,6 +6,9 @@
       "homeTeamId": "1",
       "awayTeamId": "2",
       "groupId": "1",
+      "homeScore": null,
+      "awayScore": null,
+      "playedAt": null,
       "createdAt": "2024-01-01T00:00:00.000Z",
       "updatedAt": "2024-01-01T00:00:00.000Z"
     },
@@ -15,6 +18,9 @@
       "homeTeamId": "3",
       "awayTeamId": "4",
       "groupId": "2",
+      "homeScore": null,
+      "awayScore": null,
+      "playedAt": null,
       "createdAt": "2024-01-01T00:00:00.000Z",
       "updatedAt": "2024-01-01T00:00:00.000Z"
     }

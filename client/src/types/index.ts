@@ -46,6 +46,7 @@ export interface Goal {
   matchId: string;
   playerId: string;
   teamId: string;
+  minute: number;
   timestamp: string;
   createdAt: string;
   updatedAt: string;
@@ -82,15 +83,12 @@ export interface TopScorer {
 export interface MatchWithDetails extends Match {
   homeTeamName: string;
   awayTeamName: string;
-  homeScore: number | null;
-  awayScore: number | null;
-  playedAt: string | null;
-  homeTeamId: string;
-  awayTeamId: string;
+  goals: Goal[];
+  homeTeam?: Team;
+  awayTeam?: Team;
 }
 
 export interface FormattedGoal extends Goal {
-  id: string;
   playerName: string;
   teamName: string;
 } 

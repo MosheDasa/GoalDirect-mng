@@ -4,6 +4,7 @@
       "id": "1",
       "matchId": "1",
       "playerId": "1",
+      "teamId": "1",
       "minute": 23,
       "createdAt": "2024-01-01T00:00:00.000Z",
       "updatedAt": "2024-01-01T00:00:00.000Z"
@@ -12,6 +13,7 @@
       "id": "2",
       "matchId": "1",
       "playerId": "3",
+      "teamId": "2",
       "minute": 67,
       "createdAt": "2024-01-01T00:00:00.000Z",
       "updatedAt": "2024-01-01T00:00:00.000Z"

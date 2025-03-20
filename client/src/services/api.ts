@@ -7,7 +7,8 @@ import {
   Goal, 
   Announcement, 
   TeamStanding, 
-  TopScorer 
+  TopScorer,
+  MatchWithDetails
 } from '../types';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
@@ -102,11 +103,11 @@ export const groupsApi = {
 
 // Matches API
 export const matchesApi = {
-  getAll: async (): Promise<Match[]> => {
+  getAll: async (): Promise<MatchWithDetails[]> => {
     const response = await api.get('/matches');
     return response.data;
   },
-  getById: async (id: string): Promise<Match> => {
+  getById: async (id: string): Promise<MatchWithDetails> => {
     const response = await api.get(`/matches/${id}`);
     return response.data;
   },
@@ -120,6 +121,10 @@ export const matchesApi = {
   },
   delete: async (id: string): Promise<void> => {
     await api.delete(`/matches/${id}`);
+  },
+  getGoals: async (matchId: string): Promise<Goal[]> => {
+    const response = await api.get(`/matches/${matchId}/goals`);
+    return response.data;
   },
 };
 
