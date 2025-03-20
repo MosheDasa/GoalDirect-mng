@@ -3,28 +3,28 @@
     {
       "id": "1",
       "name": "מכבי תל אביב",
-      "groupId": null,
+      "groupId": "12121",
       "createdAt": "2024-01-01T00:00:00.000Z",
       "updatedAt": "2024-01-01T00:00:00.000Z"
     },
     {
       "id": "2",
       "name": "הפועל תל אביב",
-      "groupId": null,
+      "groupId": "232312",
       "createdAt": "2024-01-01T00:00:00.000Z",
       "updatedAt": "2024-01-01T00:00:00.000Z"
     },
     {
       "id": "3",
       "name": "מכבי חיפה",
-      "groupId": null,
+      "groupId": "21212",
       "createdAt": "2024-01-01T00:00:00.000Z",
       "updatedAt": "2024-01-01T00:00:00.000Z"
     },
     {
       "id": "4",
       "name": "הפועל באר שבע",
-      "groupId": null,
+      "groupId": "54545",
       "createdAt": "2024-01-01T00:00:00.000Z",
       "updatedAt": "2024-01-01T00:00:00.000Z"
     }

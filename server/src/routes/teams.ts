@@ -42,9 +42,9 @@ router.post('/', (req, res) => {
   }
 
   const team: Team = {
-    id: uuidv4(),
+    id:  uuidv4(),
     name,
-    groupId: null,
+    groupId: "",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   };

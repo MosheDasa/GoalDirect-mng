@@ -83,7 +83,7 @@ router.delete('/:id', (req, res) => {
   // Remove group from teams
   teams.forEach(team => {
     if (team.groupId === groups[index].id) {
-      team.groupId = null;
+      team.groupId = "";
     }
   });
 
@@ -127,7 +127,7 @@ router.post('/draw', (req, res) => {
 
   // Reset all teams' groupId to null
   teams.forEach(team => {
-    team.groupId = null;
+    team.groupId = "";
   });
 
   // Distribute teams randomly
@@ -140,7 +140,10 @@ router.post('/draw', (req, res) => {
     const teamsInGroup = teamsPerGroup + (groupIndex < remainingTeams ? 1 : 0);
     const groupTeams = shuffledTeams.slice(currentTeamIndex, currentTeamIndex + teamsInGroup);
     groupTeams.forEach(team => {
-      team.groupId = group.id;
+      const teamIndex = teams.findIndex(t => t.id === team.id);
+      if (teamIndex !== -1) {
+        teams[teamIndex].groupId = group.id;
+      }
     });
     currentTeamIndex += teamsInGroup;
   });

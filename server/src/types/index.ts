@@ -1,7 +1,7 @@
 export interface Team {
   id: string;
   name: string;
-  groupId: string | null;
+  groupId: string ;
   createdAt: string;
   updatedAt: string;
 }
