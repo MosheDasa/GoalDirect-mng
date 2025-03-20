@@ -2,6 +2,8 @@ import express from 'express';
 import fs from 'fs';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
+import { Match } from '../types';
+import { matches } from '../data/matches.json';
 
 const router = express.Router();
 const dataPath = path.join(__dirname, '../data/matches.json');

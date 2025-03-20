@@ -7,8 +7,8 @@ import {
   TrophyOutlined, 
   NotificationOutlined 
 } from '@ant-design/icons';
-import { teamsApi, playersApi, matchesApi, announcementsApi } from '@services/api';
-import { Team, Player, Match, Announcement } from '@types';
+import { matchesApi, teamsApi, playersApi, goalsApi, standingsApi, announcementsApi } from '@services/api';
+import { Match, Team, Player, Goal, TeamStanding, Announcement } from '../types';
 
 const { Title } = Typography;
 

@@ -29,12 +29,12 @@ export const teamsApi = {
     const response = await api.get(`/teams/${id}`);
     return response.data;
   },
-  create: async (team: Omit<Team, 'id' | 'createdAt' | 'updatedAt'>): Promise<Team> => {
-    const response = await api.post('/teams', team);
+  create: async (data: Omit<Team, 'id' | 'groupId' | 'createdAt' | 'updatedAt'>): Promise<Team> => {
+    const response = await api.post('/teams', data);
     return response.data;
   },
-  update: async (id: string, team: Partial<Team>): Promise<Team> => {
-    const response = await api.put(`/teams/${id}`, team);
+  update: async (id: string, data: Partial<Team>): Promise<Team> => {
+    const response = await api.put(`/teams/${id}`, data);
     return response.data;
   },
   delete: async (id: string): Promise<void> => {
@@ -81,6 +81,21 @@ export const groupsApi = {
   },
   getById: async (id: string): Promise<Group> => {
     const response = await api.get(`/groups/${id}`);
+    return response.data;
+  },
+  create: async (data: Omit<Group, 'id' | 'createdAt' | 'updatedAt'>): Promise<Group> => {
+    const response = await api.post('/groups', data);
+    return response.data;
+  },
+  update: async (id: string, data: Partial<Group>): Promise<Group> => {
+    const response = await api.put(`/groups/${id}`, data);
+    return response.data;
+  },
+  delete: async (id: string): Promise<void> => {
+    await api.delete(`/groups/${id}`);
+  },
+  createDraw: async (numberOfGroups: number): Promise<{ groups: Group[] }> => {
+    const response = await api.post('/groups/draw', { numberOfGroups });
     return response.data;
   },
 };

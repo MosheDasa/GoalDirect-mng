@@ -15,28 +15,12 @@ export interface Player {
   updatedAt: string;
 }
 
-export interface Group {
-  id: string;
-  name: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface GroupTeam {
-  id: string;
-  groupId: string;
-  teamId: string;
-}
-
 export interface Match {
   id: string;
   date: string;
   homeTeamId: string;
   awayTeamId: string;
-  homeScore: number | null;
-  awayScore: number | null;
   groupId: string;
-  playedAt: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -45,8 +29,21 @@ export interface Goal {
   id: string;
   matchId: string;
   playerId: string;
+  minute: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Standing {
+  id: string;
   teamId: string;
-  timestamp: string;
+  matchesPlayed: number;
+  wins: number;
+  draws: number;
+  losses: number;
+  goalsFor: number;
+  goalsAgainst: number;
+  points: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -59,38 +56,30 @@ export interface Announcement {
   updatedAt: string;
 }
 
-export interface TeamStanding {
-  teamId: string;
-  position: number;
-  matchesPlayed: number;
-  wins: number;
-  draws: number;
-  losses: number;
-  goalsFor: number;
-  goalsAgainst: number;
-  points: number;
-}
-
-export interface TopScorer {
-  playerId: string;
-  playerName: string;
-  teamId: string;
-  teamName: string;
-  goals: number;
-}
-
 export interface MatchWithDetails extends Match {
   homeTeamName: string;
   awayTeamName: string;
   homeScore: number | null;
   awayScore: number | null;
   playedAt: string | null;
-  homeTeamId: string;
-  awayTeamId: string;
 }
 
 export interface FormattedGoal extends Goal {
-  id: string;
   playerName: string;
   teamName: string;
+}
+
+export interface Group {
+  id: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TeamsData {
+  teams: Team[];
+}
+
+export interface GroupsData {
+  groups: Group[];
 } 

@@ -2,108 +2,163 @@ import express, { Request, Response } from 'express';
 import fs from 'fs';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-
-interface Group {
-  id: string;
-  name: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface GroupsData {
-  groups: Group[];
-}
+import { Group, GroupsData, TeamsData } from '../types';
+import { groups } from '../data/groups.json';
+import { teams } from '../data/teams.json';
 
 const router = express.Router();
-const dataPath = path.join(__dirname, '../data/groups.json');
-
-// Helper function to read data
-const readData = (): GroupsData => {
-  const data = fs.readFileSync(dataPath, 'utf8');
-  return JSON.parse(data);
-};
-
-// Helper function to write data
-const writeData = (data: GroupsData): void => {
-  fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
-};
 
 // Get all groups
-router.get('/', (_req: Request, res: Response) => {
-  try {
-    const data = readData();
-    res.json(data.groups);
-  } catch (error) {
-    res.status(500).json({ error: 'שגיאה בטעינת נתוני הקבוצות' });
-  }
+router.get('/', (req, res) => {
+  res.json(groups);
 });
 
 // Get group by ID
-router.get('/:id', (req: Request, res: Response) => {
-  try {
-    const data = readData();
-    const group = data.groups.find((g) => g.id === req.params.id);
-    if (!group) {
-      return res.status(404).json({ error: 'קבוצה לא נמצאה' });
-    }
-    res.json(group);
-  } catch (error) {
-    res.status(500).json({ error: 'שגיאה בטעינת נתוני הקבוצה' });
+router.get('/:id', (req, res) => {
+  const group = groups.find(g => g.id === req.params.id);
+  if (!group) {
+    return res.status(404).json({ error: 'הבית לא נמצא' });
   }
+  res.json(group);
 });
 
 // Create new group
-router.post('/', (req: Request, res: Response) => {
-  try {
-    const data = readData();
-    const newGroup: Group = {
-      id: uuidv4(),
-      name: req.body.name,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-    data.groups.push(newGroup);
-    writeData(data);
-    res.status(201).json(newGroup);
-  } catch (error) {
-    res.status(500).json({ error: 'שגיאה ביצירת קבוצה חדשה' });
+router.post('/', (req, res) => {
+  const { name } = req.body;
+  
+  if (!name) {
+    return res.status(400).json({ error: 'שם הבית הוא שדה חובה' });
   }
+
+  const group: Group = {
+    id: uuidv4(),
+    name,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+
+  groups.push(group);
+
+  const data: GroupsData = { groups };
+  fs.writeFileSync(
+    path.join(__dirname, '../data/groups.json'),
+    JSON.stringify(data, null, 2)
+  );
+
+  res.status(201).json(group);
 });
 
 // Update group
-router.put('/:id', (req: Request, res: Response) => {
-  try {
-    const data = readData();
-    const index = data.groups.findIndex((g) => g.id === req.params.id);
-    if (index === -1) {
-      return res.status(404).json({ error: 'קבוצה לא נמצאה' });
-    }
-    data.groups[index] = {
-      ...data.groups[index],
-      name: req.body.name,
-      updatedAt: new Date().toISOString()
-    };
-    writeData(data);
-    res.json(data.groups[index]);
-  } catch (error) {
-    res.status(500).json({ error: 'שגיאה בעדכון הקבוצה' });
+router.put('/:id', (req, res) => {
+  const { name } = req.body;
+  const group = groups.find(g => g.id === req.params.id);
+
+  if (!group) {
+    return res.status(404).json({ error: 'הבית לא נמצא' });
   }
+
+  if (name) {
+    group.name = name;
+  }
+
+  group.updatedAt = new Date().toISOString();
+
+  const data: GroupsData = { groups };
+  fs.writeFileSync(
+    path.join(__dirname, '../data/groups.json'),
+    JSON.stringify(data, null, 2)
+  );
+
+  res.json(group);
 });
 
 // Delete group
-router.delete('/:id', (req: Request, res: Response) => {
-  try {
-    const data = readData();
-    const index = data.groups.findIndex((g) => g.id === req.params.id);
-    if (index === -1) {
-      return res.status(404).json({ error: 'קבוצה לא נמצאה' });
-    }
-    data.groups.splice(index, 1);
-    writeData(data);
-    res.status(204).send();
-  } catch (error) {
-    res.status(500).json({ error: 'שגיאה במחיקת הקבוצה' });
+router.delete('/:id', (req, res) => {
+  const index = groups.findIndex(g => g.id === req.params.id);
+
+  if (index === -1) {
+    return res.status(404).json({ error: 'הבית לא נמצא' });
   }
+
+  // Remove group from teams
+  teams.forEach(team => {
+    if (team.groupId === groups[index].id) {
+      team.groupId = null;
+    }
+  });
+
+  groups.splice(index, 1);
+
+  const groupsData: GroupsData = { groups };
+  fs.writeFileSync(
+    path.join(__dirname, '../data/groups.json'),
+    JSON.stringify(groupsData, null, 2)
+  );
+
+  const teamsData: TeamsData = { teams };
+  fs.writeFileSync(
+    path.join(__dirname, '../data/teams.json'),
+    JSON.stringify(teamsData, null, 2)
+  );
+
+  res.status(204).send();
+});
+
+router.post('/draw', (req, res) => {
+  const { numberOfGroups } = req.body;
+  
+  if (!numberOfGroups || numberOfGroups < 1) {
+    return res.status(400).json({ error: 'מספר הקבוצות חייב להיות גדול מ-0' });
+  }
+
+  // Clear existing groups
+  groups.length = 0;
+
+  // Create new groups
+  for (let i = 0; i < numberOfGroups; i++) {
+    const group: Group = {
+      id: uuidv4(),
+      name: `בית ${String.fromCharCode(65 + i)}`,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    groups.push(group);
+  }
+
+  // Reset all teams' groupId to null
+  teams.forEach(team => {
+    team.groupId = null;
+  });
+
+  // Distribute teams randomly
+  const shuffledTeams = [...teams].sort(() => Math.random() - 0.5);
+  const teamsPerGroup = Math.floor(shuffledTeams.length / numberOfGroups);
+  const remainingTeams = shuffledTeams.length % numberOfGroups;
+
+  let currentTeamIndex = 0;
+  groups.forEach((group, groupIndex) => {
+    const teamsInGroup = teamsPerGroup + (groupIndex < remainingTeams ? 1 : 0);
+    const groupTeams = shuffledTeams.slice(currentTeamIndex, currentTeamIndex + teamsInGroup);
+    groupTeams.forEach(team => {
+      team.groupId = group.id;
+    });
+    currentTeamIndex += teamsInGroup;
+  });
+
+  // Save changes to files
+  const groupsData: GroupsData = { groups };
+  fs.writeFileSync(
+    path.join(__dirname, '../data/groups.json'),
+    JSON.stringify(groupsData, null, 2)
+  );
+
+  const teamsData: TeamsData = { teams };
+  fs.writeFileSync(
+    path.join(__dirname, '../data/teams.json'),
+    JSON.stringify(teamsData, null, 2)
+  );
+
+  res.json({ groups });
 });
 
 export { router as groupsRouter }; 

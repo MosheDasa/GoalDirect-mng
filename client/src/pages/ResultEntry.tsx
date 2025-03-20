@@ -22,7 +22,7 @@ import {
   TrophyOutlined
 } from '@ant-design/icons';
 import { matchesApi, teamsApi, playersApi, goalsApi } from '@services/api';
-import { Match, Team, Player, Goal } from '@types';
+import { Match, Team, Player, Goal } from '../types';
 
 const { Title, Text } = Typography;
 const { TabPane } = Tabs;

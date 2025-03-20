@@ -2,6 +2,8 @@ import express from 'express';
 import fs from 'fs';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
+import { Announcement } from '../types';
+import { announcements } from '../data/announcements.json';
 
 const router = express.Router();
 const dataPath = path.join(__dirname, '../data/announcements.json');
